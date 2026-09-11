@@ -62,6 +62,8 @@ func amazonCommunityNormalizeQuality(quality string) string {
 		return "16"
 	case "atmos", "eac3", "dolby":
 		return "atmos"
+	case "mp3":
+		return "mp3"
 	default:
 		return "24"
 	}
@@ -184,9 +186,12 @@ func (a *AmazonDownloader) downloadFromCommunity(amazonURL, outputDir, quality s
 	}
 
 	targetExt := ".flac"
+	normalizedQuality := amazonCommunityNormalizeQuality(quality)
 	codec := strings.ToLower(strings.TrimSpace(apiResp.Codec))
-	if amazonCommunityNormalizeQuality(quality) == "atmos" || codec == "eac3" || codec == "ec-3" || codec == "ac-3" {
+	if normalizedQuality == "atmos" || codec == "eac3" || codec == "ec-3" || codec == "ac-3" {
 		targetExt = ".m4a"
+	} else if normalizedQuality == "mp3" {
+		targetExt = ".mp3"
 	}
 	finalPath := filepath.Join(outputDir, asin+targetExt)
 
@@ -217,11 +222,16 @@ func amazonRemuxWithFFmpeg(inputPath, outputPath, targetExt string) error {
 		return string(output), err
 	}
 
-	args := []string{"-y", "-i", inputPath, "-map", "0:a:0", "-vn", "-c:a", "copy"}
-	if targetExt == ".m4a" {
-		args = append(args, "-f", "mp4")
+	var args []string
+	if targetExt == ".mp3" {
+		args = []string{"-y", "-i", inputPath, "-map", "0:a:0", "-vn", "-c:a", "libmp3lame", "-b:a", "320k", outputPath}
+	} else {
+		args = []string{"-y", "-i", inputPath, "-map", "0:a:0", "-vn", "-c:a", "copy"}
+		if targetExt == ".m4a" {
+			args = append(args, "-f", "mp4")
+		}
+		args = append(args, outputPath)
 	}
-	args = append(args, outputPath)
 
 	if output, err := runFFmpeg(args...); err != nil {
 		if targetExt == ".flac" {
@@ -259,7 +269,7 @@ func (a *AmazonDownloader) DownloadByURL(amazonURL, outputDir, quality, filename
 			filenameArtist = GetFirstArtist(spotifyArtistName)
 			filenameAlbumArtist = GetFirstArtist(spotifyAlbumArtist)
 		}
-		expectedFilename := BuildExpectedFilename(spotifyTrackName, filenameArtist, spotifyAlbumName, filenameAlbumArtist, spotifyReleaseDate, filenameFormat, playlistName, playlistOwner, includeTrackNumber, position, spotifyDiscNumber, false, isrcOverride)
+		expectedFilename := BuildExpectedFilename(spotifyTrackName, filenameArtist, spotifyAlbumName, filenameAlbumArtist, spotifyReleaseDate, filenameFormat, playlistName, playlistOwner, quality, includeTrackNumber, position, spotifyDiscNumber, false, isrcOverride)
 		expectedPath := filepath.Join(outputDir, expectedFilename)
 
 		if !GetRedownloadWithSuffixSetting() {

@@ -130,6 +130,7 @@ export interface DownloadRequest {
     output_dir?: string;
     library_root?: string;
     audio_format?: string;
+    download_as_mp3?: boolean;
     allow_fallback?: boolean;
     allow_atmos_fallback?: boolean;
     atmos_fallback_quality?: "16" | "24";

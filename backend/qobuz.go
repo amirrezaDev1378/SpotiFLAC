@@ -363,7 +363,9 @@ func (q *QobuzDownloader) searchByISRC(isrc string, spotifyTrackName string, spo
 
 func (q *QobuzDownloader) GetDownloadURL(trackID int64, quality string, allowFallback bool) (string, error) {
 	qualityCode := quality
-	if qualityCode == "" || qualityCode == "5" {
+	if qualityCode == "mp3" {
+		qualityCode = "5"
+	} else if qualityCode == "" || qualityCode == "5" {
 		qualityCode = "6"
 	}
 
@@ -565,7 +567,11 @@ func buildQobuzFilename(title, artist, album, albumArtist, releaseDate string, t
 		}
 	}
 
-	return filename + ".flac"
+	ext := ".flac"
+	if format == "mp3" || format == "5" {
+		ext = ".mp3"
+	}
+	return filename + ext
 }
 
 func (q *QobuzDownloader) DownloadTrack(spotifyID, outputDir, quality, filenameFormat string, includeTrackNumber bool, position int, spotifyTrackName, spotifyArtistName, spotifyAlbumName, spotifyAlbumArtist, spotifyReleaseDate string, useAlbumTrackNumber bool, spotifyCoverURL string, embedMaxQualityCover bool, spotifyTrackNumber, spotifyDiscNumber, spotifyTotalTracks int, spotifyTotalDiscs int, spotifyCopyright, spotifyPublisher, spotifyComposer, metadataSeparator, spotifyURL string, allowFallback bool, useFirstArtistOnly bool, useSingleGenre bool, embedGenre bool) (string, error) {

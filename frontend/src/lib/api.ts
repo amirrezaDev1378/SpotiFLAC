@@ -22,6 +22,7 @@ export async function downloadTrack(request: DownloadRequest): Promise<DownloadR
     const enriched = {
         ...request,
         library_root: settings.downloadPath,
+        download_as_mp3: settings.downloadAsMp3,
         auto_convert_audio: settings.autoConvertAudio,
         auto_convert_format: settings.autoConvertFormat,
         auto_convert_bitrate: settings.autoConvertBitrate,

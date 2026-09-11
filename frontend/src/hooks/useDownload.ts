@@ -195,9 +195,13 @@ function getTidalAudioFormat(settings: any, mode: "single" | "auto"): "LOSSLESS"
     return settings.tidalQuality || "LOSSLESS";
 }
 function getExpectedAudioFormat(settings: {
+    downloadAsMp3?: boolean;
     autoConvertAudio?: boolean;
     autoConvertFormat?: string;
 }): string {
+    if (settings.downloadAsMp3) {
+        return "mp3";
+    }
     return settings.autoConvertAudio ? settings.autoConvertFormat || "mp3" : "flac";
 }
 function deduplicateTracksBySpotifyID(tracks: TrackMetadata[]): TrackMetadata[] {

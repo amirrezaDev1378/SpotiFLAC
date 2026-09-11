@@ -119,13 +119,18 @@ func buildFormattedFilenameBase(trackName, artistName, albumName, albumArtist, r
 	return filename
 }
 
-func BuildExpectedFilename(trackName, artistName, albumName, albumArtist, releaseDate, filenameFormat, playlistName, playlistOwner string, includeTrackNumber bool, position, discNumber int, useAlbumTrackNumber bool, extra ...string) string {
+func BuildExpectedFilename(trackName, artistName, albumName, albumArtist, releaseDate, filenameFormat, playlistName, playlistOwner, audioFormat string, includeTrackNumber bool, position, discNumber int, useAlbumTrackNumber bool, extra ...string) string {
 	isrc := ""
 	if len(extra) > 0 {
 		isrc = extra[0]
 	}
 
-	return buildFormattedFilenameBase(trackName, artistName, albumName, albumArtist, releaseDate, filenameFormat, playlistName, playlistOwner, isrc, includeTrackNumber, position, discNumber, useAlbumTrackNumber) + ".flac"
+	ext := ".flac"
+	if strings.ToLower(strings.TrimSpace(audioFormat)) == "mp3" {
+		ext = ".mp3"
+	}
+
+	return buildFormattedFilenameBase(trackName, artistName, albumName, albumArtist, releaseDate, filenameFormat, playlistName, playlistOwner, isrc, includeTrackNumber, position, discNumber, useAlbumTrackNumber) + ext
 }
 
 func ResolveOutputPathForDownload(path string, redownloadWithSuffix bool) (string, bool) {

@@ -14,7 +14,7 @@ var configSections = []struct {
 }{
 	{"settingsPage", "general", []string{"downloadPath", "language", "baseColor", "theme", "themeMode", "fontFamily", "operatingSystem", "sfxEnabled", "previewVolume", "showUpdateNotifications"}},
 	{"settingsPage", "naming", []string{"folderPreset", "folderTemplate", "applyFolderToSingleTrack", "filenamePreset", "filenameTemplate", "albumFilenameTemplate", "useSeparateAlbumFilename", "trackNumber"}},
-	{"settingsPage", "fileManagement", []string{"createPlaylistFolder", "playlistOwnerFolderName", "createM3u8File", "saveCover", "exportLogsFile", "exportLogsOnlyFailed", "autoConvertAudio", "autoConvertFormat", "autoConvertBitrate", "autoConvertDeleteOriginal", "autoResampleAudio", "autoResampleSampleRate", "autoResampleBitDepth", "autoResampleDeleteOriginal", "autoReplayGainTags", "autoReplayGainMode", "redownloadWithSuffix", "existingFileCheckMode", "metadataDateFormat", "metadataTags"}},
+	{"settingsPage", "fileManagement", []string{"createPlaylistFolder", "playlistOwnerFolderName", "createM3u8File", "saveCover", "exportLogsFile", "exportLogsOnlyFailed", "downloadAsMp3", "autoConvertAudio", "autoConvertFormat", "autoConvertBitrate", "autoConvertDeleteOriginal", "autoResampleAudio", "autoResampleSampleRate", "autoResampleBitDepth", "autoResampleDeleteOriginal", "autoReplayGainTags", "autoReplayGainMode", "redownloadWithSuffix", "existingFileCheckMode", "metadataDateFormat", "metadataTags"}},
 	{"settingsPage", "metadata", []string{"embedLyrics", "embedMaxQualityCover", "useFirstArtistOnly", "useSingleGenre", "embedGenre", "separator"}},
 	{"workflowPage", "mode", []string{"downloader", "autoQuality", "allowFallback"}},
 	{"workflowPage", "ordering", []string{"autoOrder"}},
