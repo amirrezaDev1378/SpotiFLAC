@@ -373,6 +373,7 @@ type DownloadRequest struct {
 	OutputDir                  string `json:"output_dir,omitempty"`
 	LibraryRoot                string `json:"library_root,omitempty"`
 	AudioFormat                string `json:"audio_format,omitempty"`
+	DownloadAsMp3              bool   `json:"download_as_mp3,omitempty"`
 	FilenameFormat             string `json:"filename_format,omitempty"`
 	TrackNumber                bool   `json:"track_number,omitempty"`
 	Position                   int    `json:"position,omitempty"`
@@ -662,6 +663,10 @@ func (a *App) DownloadTrack(req DownloadRequest) (DownloadResponse, error) {
 		req.OutputDir = backend.NormalizePath(req.OutputDir)
 	}
 
+	if req.DownloadAsMp3 {
+		req.AudioFormat = "mp3"
+	}
+
 	if req.AudioFormat == "" {
 		req.AudioFormat = "LOSSLESS"
 	}
@@ -789,7 +794,7 @@ func (a *App) DownloadTrack(req DownloadRequest) (DownloadResponse, error) {
 	}
 
 	if req.TrackName != "" && req.ArtistName != "" {
-		expectedFilename := backend.BuildExpectedFilename(req.TrackName, req.ArtistName, req.AlbumName, req.AlbumArtist, req.ReleaseDate, req.FilenameFormat, req.PlaylistName, req.PlaylistOwner, req.TrackNumber, req.Position, req.SpotifyDiscNumber, req.UseAlbumTrackNumber, req.ISRC)
+		expectedFilename := backend.BuildExpectedFilename(req.TrackName, req.ArtistName, req.AlbumName, req.AlbumArtist, req.ReleaseDate, req.FilenameFormat, req.PlaylistName, req.PlaylistOwner, req.AudioFormat, req.TrackNumber, req.Position, req.SpotifyDiscNumber, req.UseAlbumTrackNumber, req.ISRC)
 		expectedFilename = strings.TrimSuffix(expectedFilename, filepath.Ext(expectedFilename)) + autoConvertExtension(req)
 		expectedPath := filepath.Join(req.OutputDir, expectedFilename)
 
@@ -2657,6 +2662,7 @@ func buildExistenceFilenameCandidates(t CheckFileExistenceRequest, defaultFilena
 			filenameFormat,
 			"",
 			"",
+			t.AudioFormat,
 			t.IncludeTrackNumber,
 			trackNumber,
 			t.DiscNumber,

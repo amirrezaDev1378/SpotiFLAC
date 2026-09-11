@@ -541,6 +541,8 @@
     "settings": {
       "addFont": "Add Font",
       "allPerformers": "All performers",
+      "downloadAsMp3": "Download as .MP3",
+      "downloadAsMp3Desc": "(This is not lossless)",
       "autoConvertAudio": "Automatic Audio Conversion",
       "autoDownloadSeparateCover": "Save Cover as Separate File",
       "autoResampleAudio": "Automatic Audio Resampling",

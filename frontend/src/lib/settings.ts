@@ -85,6 +85,7 @@ export interface Settings {
     showUpdateNotifications: boolean;
     previewVolume: number;
     existingFileCheckMode: ExistingFileCheckMode;
+    downloadAsMp3: boolean;
     autoConvertAudio: boolean;
     autoConvertFormat: "mp3" | "m4a-aac" | "m4a-alac" | "wav" | "aiff" | "opus";
     autoConvertBitrate: "320k" | "256k" | "192k" | "128k";
@@ -272,6 +273,7 @@ export const DEFAULT_SETTINGS: Settings = {
     showUpdateNotifications: true,
     previewVolume: 100,
     existingFileCheckMode: "filename",
+    downloadAsMp3: false,
     autoConvertAudio: false,
     autoConvertFormat: "mp3",
     autoConvertBitrate: "320k",
@@ -782,6 +784,7 @@ function normalizeSettingsPayload(settings: SettingsPayload): SettingsPayload {
     normalized.showUpdateNotifications = typeof settings.showUpdateNotifications === "boolean" ? settings.showUpdateNotifications : true;
     normalized.previewVolume = normalizePreviewVolume(normalized.previewVolume);
     normalized.existingFileCheckMode = normalizeExistingFileCheckMode(normalized.existingFileCheckMode);
+    normalized.downloadAsMp3 = typeof normalized.downloadAsMp3 === "boolean" ? normalized.downloadAsMp3 : false;
     normalized.autoReplayGainTags = typeof normalized.autoReplayGainTags === "boolean"
         ? normalized.autoReplayGainTags
         : DEFAULT_SETTINGS.autoReplayGainTags;

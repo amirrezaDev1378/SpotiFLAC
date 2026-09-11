@@ -1117,6 +1117,17 @@ export function SettingsPage({ onUnsavedChangesChange, onResetRequest, }: Settin
             <div className="space-y-6 lg:pl-0">
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-muted-foreground">{t("translation.settings.audioProcessing")}</h3>
+
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <Switch id="download-as-mp3" checked={tempSettings.downloadAsMp3} onCheckedChange={(checked) => setTempSettings((prev) => ({ ...prev, downloadAsMp3: checked }))}/>
+                    <Label htmlFor="download-as-mp3" className="text-sm font-normal cursor-pointer">
+                      {t("translation.settings.downloadAsMp3")}
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-7">{t("translation.settings.downloadAsMp3Desc")}</p>
+                </div>
+
                 <div className="flex items-center gap-3">
                   <Switch id="auto-convert-audio" checked={tempSettings.autoConvertAudio} onCheckedChange={(checked) => setTempSettings((prev) => ({ ...prev, autoConvertAudio: checked }))}/>
                   <Label htmlFor="auto-convert-audio" className="text-sm font-normal cursor-pointer">{t("translation.settings.autoConvertAudio")}</Label>

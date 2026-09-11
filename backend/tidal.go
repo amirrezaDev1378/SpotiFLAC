@@ -100,6 +100,8 @@ func buildTidalOutputPath(outputDir, filenameFormat string, includeTrackNumber b
 	filename := buildTidalFilename(trackTitleForFile, artistNameForFile, albumTitleForFile, albumArtistForFile, spotifyReleaseDate, spotifyTrackNumber, spotifyDiscNumber, filenameFormat, includeTrackNumber, position, useAlbumTrackNumber, isrcOverride)
 	if isTidalAtmosQuality(quality) {
 		filename = strings.TrimSuffix(filename, ".flac") + ".m4a"
+	} else if quality == "mp3" {
+		filename = strings.TrimSuffix(filename, ".flac") + ".mp3"
 	}
 	outputFilename := filepath.Join(outputDir, filename)
 
@@ -282,6 +284,9 @@ func (t *TidalDownloader) GetTrackIDFromURL(tidalURL string) (int64, error) {
 
 func (t *TidalDownloader) GetDownloadURL(trackID int64, quality string) (string, error) {
 	fmt.Println("Fetching URL...")
+	if quality == "mp3" {
+		quality = "HIGH"
+	}
 	if strings.TrimSpace(t.apiURL) == "" {
 		fmt.Println("No custom Tidal instance configured, using community tdl-a endpoint")
 		return t.getTidalCommunityDownloadURL(trackID, quality)
@@ -414,7 +419,7 @@ func (t *TidalDownloader) DownloadFromManifest(manifestB64, outputPath string, q
 
 	isLosslessRequested := quality == "LOSSLESS" || quality == "HI_RES" || quality == "HI_RES_LOSSLESS"
 	isActualLossless := strings.Contains(strings.ToLower(mimeType), "flac") || mimeType == ""
-	if isLosslessRequested && !isActualLossless {
+	if quality != "mp3" && isLosslessRequested && !isActualLossless {
 		return fmt.Errorf("requested %s quality but Tidal provided lossy format (%s). Aborting download", quality, mimeType)
 	}
 
@@ -598,11 +603,14 @@ func (t *TidalDownloader) DownloadFromManifest(manifestB64, outputPath string, q
 	codec := "flac"
 	if isAtmos {
 		codec = "copy"
+	} else if quality == "mp3" {
+		codec = "libmp3lame"
 	}
 	ffmpegArgs := []string{"-y", "-i", tempPath, "-vn", "-c:a", codec}
 	if isAtmos {
-
 		ffmpegArgs = append(ffmpegArgs, "-f", "mp4")
+	} else if quality == "mp3" {
+		ffmpegArgs = append(ffmpegArgs, "-b:a", "320k")
 	}
 	ffmpegArgs = append(ffmpegArgs, outputPath)
 	cmd := exec.Command(ffmpegPath, ffmpegArgs...)
